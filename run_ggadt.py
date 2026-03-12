@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 """Run GGADT batches from parameter folders.
 
-Loads `.ini` scenarios from `params/<--params>/`, optionally builds a material
-table from n/k data, and writes results/logs to
-`../ggadt_output/<--output>/`.
+Loads `.ini` scenarios from `params/<name>/`, optionally builds a material
+table from n/k data, and writes results/logs to `../ggadt_output/<name>/`.
 """
 
 from __future__ import annotations
@@ -56,15 +55,15 @@ def _collect_input_files(raw_paths: list[str], directory_glob: str) -> list[Path
     return unique
 
 
-def _resolve_child_dir(base: Path, child: str, flag_name: str) -> Path:
+def _resolve_child_dir(base: Path, child: str, label: str) -> Path:
     value = child.strip()
     if not value:
-        raise ValueError(f"--{flag_name} cannot be empty")
+        raise ValueError(f"{label} cannot be empty")
 
     candidate = Path(value)
     if candidate.is_absolute() or len(candidate.parts) != 1 or value in {".", ".."}:
         raise ValueError(
-            f"--{flag_name} must be a child folder name (example: --{flag_name} my_examples)"
+            f"{label} must be a child folder name (example: my_examples)"
         )
 
     return (base / candidate).resolve()
@@ -399,23 +398,11 @@ def _run_one(
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="Run GGADT for one or more existing .ini parameter files."
+        description="Run GGADT for all .ini files in params/<name> with outputs in ggadt_output/<name>."
     )
     parser.add_argument(
-        "--params",
-        required=True,
-        help=(
-            "Child folder under params/ containing .ini files "
-            "(example: --params a_MgFeSiO4_examples)."
-        ),
-    )
-    parser.add_argument(
-        "--output",
-        required=True,
-        help=(
-            "Child folder under ../ggadt_output/ for results/logs/material "
-            "(example: --output a_MgFeSiO4_examples)."
-        ),
+        "name",
+        help="Shared child folder name for params/<name> and ../ggadt_output/<name>.",
     )
     parser.add_argument(
         "--ggadt-binary",
@@ -463,8 +450,8 @@ def main() -> int:
     args = build_parser().parse_args()
 
     try:
-        params_dir = _resolve_child_dir(PARAMS_ROOT, args.params, "params")
-        output_dir = _resolve_child_dir(OUTPUT_ROOT, args.output, "output")
+        params_dir = _resolve_child_dir(PARAMS_ROOT, args.name, "name")
+        output_dir = _resolve_child_dir(OUTPUT_ROOT, args.name, "name")
         results_dir = output_dir / "results"
         logs_dir = output_dir / "logs"
 
