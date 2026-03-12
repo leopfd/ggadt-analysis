@@ -14,20 +14,25 @@ Tools for running GGADT parameter batches and plotting GGADT outputs.
 
 1. Create or copy a parameter set folder under `params/`:
    - Example: `params/a_MgFeSiO4_examples/`
+   - Also valid: `params/test_run_01/`
+   - Naming convention: use the same set name across folders, e.g.
+     `params/test_run_01`, `grains/test_run_01`, and `../ggadt_output/test_run_01`.
 2. Run a dry-run check:
-   - `python3 run_ggadt.py --params a_MgFeSiO4_examples --output a_MgFeSiO4_examples --dry-run`
+   - `python3 run_ggadt.py a_MgFeSiO4_examples --dry-run`
+   - `python3 run_ggadt.py test_run_01 --dry-run`
 3. Run GGADT:
-   - `python3 run_ggadt.py --params a_MgFeSiO4_examples --output a_MgFeSiO4_examples`
+   - `python3 run_ggadt.py a_MgFeSiO4_examples`
+   - `python3 run_ggadt.py test_run_01`
 4. Optional material generation from n/k files:
-   - `python3 run_ggadt.py --params a_MgFeSiO4_examples --output a_MgFeSiO4_examples --material a-MgFeSiO4`
+   - `python3 run_ggadt.py a_MgFeSiO4_examples --material a-MgFeSiO4`
 
 ## Output Layout
 
 Runs write to:
 
-- `../ggadt_output/<output>/results`
-- `../ggadt_output/<output>/logs`
-- `../ggadt_output/<output>/<material>_material.dat` (when `--material` is used)
+- `../ggadt_output/<name>/results`
+- `../ggadt_output/<name>/logs`
+- `../ggadt_output/<name>/<material>_material.dat` (when `--material` is used)
 
 ## Plotting
 
