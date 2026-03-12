@@ -10,3 +10,6 @@ __pycache__/
 
 # All generated pdf output
 *.pdf
+
+# Data tables (includes generated material files)
+*.dat
